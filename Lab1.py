@@ -4,7 +4,7 @@ File Name: Lab1.py
 Description: Contains code that prints the phrase "Go Gators!" and rock paper scissors program.
 Date: August 28, 2024
 """
-print ("Go gators!")
+print ("Go gators!") #Prints message when program is run
 
 import random # imports the library named random
 def rps():
@@ -14,13 +14,13 @@ def rps():
     Results: none (printing doesn't count as a result)
     """
     user = input("Choose your weapon: ")
-    comp = random.choice(['rock', 'paper', 'scissors'])
+    comp = random.choice(['rock', 'paper', 'scissors']) #Randomizes the move the computer makes
 
 
     print('The user (you) chose', user)
     print('The computer (I) chose', comp)
 
-    if user == 'rock' and comp == 'scissors':
+    if user == 'rock' and comp == 'scissors': #If statements check the moves of player and computer to determine who wins
         print('You won!')
 
     elif user == 'rock' and comp == 'paper':
