@@ -1,0 +1,55 @@
+a. Class Initialization
+
+       attributes:
+
+               s: values in the set as a list
+
+               size: number of values in the set as an int
+
+               s: initially empty
+
+               size: initially 0
+
+b. search function to look for value in list
+
+         input: any value
+
+         outputs: true or false whether the value is in the list
+
+                     a for loop check each value in list
+
+                     true or false if the value checked is the value being searched for
+
+                     returns false if the element searched for isn't in the set
+
+c. insert function to add a value to list
+
+             input: value added to list
+
+             no output
+
+                             value is added to the end of the list 
+
+                             check if the value that is being added already exists in the list using the previous search function
+
+                             the size attribute needs to increase
+
+d. delete function to remove a value from list
+
+              input: value to be deleted
+
+              output: true or false indicating if the value is removed
+
+                         for loop to check each value in the list 
+
+                         deleting an value affects the positions of other values in the list 
+
+                         list size and value position needs to change
+
+e. traverse function to display all value in the list
+
+              no input
+
+              output: displays list of values
+
+                            return the values of the list
