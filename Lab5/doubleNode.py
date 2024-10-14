@@ -1,7 +1,7 @@
 """
 Name: Eric Yu
 Filename: doubleNode.py
-Description:
+Description: Implementation of double node
 Date: October 13, 2024
 """
 
