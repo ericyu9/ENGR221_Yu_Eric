@@ -79,4 +79,4 @@ if __name__ == '__main__':
     print(rs())
     print(rwpos(0,5))
     steps = rwsteps(5,0,10)
-    print("Steps:", steps)   
+    print("Steps:", steps)  
