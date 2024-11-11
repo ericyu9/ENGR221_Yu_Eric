@@ -1,5 +1,5 @@
 """
-Name: Eric Yu
+Author: Eric Yu
 Filename: deque.py
 Description: Double ended queue program for a doubly linked list.
 Date: October 13, 2024

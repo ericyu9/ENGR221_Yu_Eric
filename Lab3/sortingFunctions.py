@@ -1,5 +1,5 @@
 """
-Name: Eric Yu
+Author: Eric Yu
 Filename: sortingFunctions.py
 Description: Implementation of sorting algorithms.
 Date: September 23, 2024

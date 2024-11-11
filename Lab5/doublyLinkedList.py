@@ -1,5 +1,5 @@
 """
-Name: Eric Yu
+Author: Eric Yu
 Filename: doublyLinkedList.py
 Description: Implementation of a doubly linked list using double nodes
 Date: October 13, 2024

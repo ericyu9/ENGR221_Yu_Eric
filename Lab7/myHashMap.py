@@ -1,5 +1,5 @@
 """
-Name: Eric Yu
+Author: Eric Yu
 Filename: myHashMap.py
 Description: Implements a hash map with methods to add, remove, delete and replace keys.
 Date: October 26, 2024

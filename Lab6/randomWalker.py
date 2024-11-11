@@ -1,5 +1,5 @@
 """
-Name: Eric Yu
+Author: Eric Yu
 Filename: randomWalker.py
 Description: Program simulates the randomization of steps taken.
 Date: October 20, 2024
