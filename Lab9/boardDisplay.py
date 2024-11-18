@@ -31,8 +31,9 @@ class BoardDisplay:
         # Draw the board
         for row in range(Preferences.NUM_CELLS_TALL):
             for col in range(Preferences.NUM_CELLS_WIDE):
-                cell = gameData.getCell(row, col)
-                self.drawSquare(cell)
+
+                cell = gameData.getCell(row, col)   #Uses row and col values to create squares
+                self.drawSquare(cell)               #Visualize the squares of board
 
         # Draw the game over message, if appropriate
         if gameData.getGameOver():

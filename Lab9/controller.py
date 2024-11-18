@@ -87,7 +87,7 @@ class Controller():
             elif event.type == pygame.KEYDOWN:
                 if event.key in self.Keypress.UP.value:
 
-                    self.__data.setDirectionNorth()
+                    self.__data.setDirectionNorth()         
 
                 elif event.key in self.Keypress.DOWN.value:
 
@@ -100,6 +100,7 @@ class Controller():
                 elif event.key in self.Keypress.RIGHT.value:
 
                     self.__data.setDirectionEast()
+
 
     def updateSnake(self):
         """ Move the snake forward one step, either in the current 
@@ -137,21 +138,21 @@ class Controller():
         # If the snake eats food
         elif nextCell.isFood():
 
-            self.__data.eatFood(nextCell)
-            nextCell.becomeHead()
-            self.__data.getSnakeHead().becomeBody()
-            self.__data.addHead(nextCell)
+            self.__data.eatFood(nextCell)               #Update the data for food being eaten
+            nextCell.becomeHead()                       #Marks next cell has the head
+            self.__data.getSnakeHead().becomeBody()     #Old head becomes a body
+            self.__data.addHead(nextCell)               #New head added to the list
 
         
         elif nextCell.isEmpty():
 
-            nextCell.becomeHead()
+            nextCell.becomeHead()                       
             self.__data.getSnakeHead().becomeBody()
             self.__data.addHead(nextCell)
 
 
-            tail = self.__data.removeTail()
-            tail.becomeEmpty()      
+            tail = self.__data.removeTail()             #Remove tail
+            tail.becomeEmpty()                          #Removed tail cell become empty
 
     def updateFood(self):
         """ Add food every FOOD_ADD_RATE cycles or if there is no food """

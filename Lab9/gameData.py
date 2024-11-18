@@ -164,7 +164,7 @@ class GameData:
         # If the snake eats food
         elif nextCell.isFood():
             print("Eating food")
-            self.__data.eatFood(nextCell)
+            self.__data.eatFood(nextCell)           
             nextCell.becomeHead()
             self.__data.getSnakeHead().becomeBody()
             self.__data.addHead(nextCell)
@@ -241,7 +241,7 @@ class GameData:
         
         else:
 
-            raise Exception("Invalid direction:")
+            raise Exception("Invalid direction:")       #Raise exception for invalid direction input
 
 
     def getNeighbors(self, center):
