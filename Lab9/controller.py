@@ -6,7 +6,7 @@ The Controller of the game, including handling key presses
 Adapted from HMC CS60
 
 Author: Eric Yu
-Date: November 17, 2024
+Date: December 8, 2024
 Description: This code implements the keybinds to move the snake in the game.
 """
 
@@ -26,6 +26,8 @@ class Controller():
         self.__display = BoardDisplay()
         # How many frames have passed
         self.__numCycles = 0
+
+        self.__paused = False               #Pause state of game
 
         # Attempt to load any sounds and images
         try:
@@ -51,12 +53,17 @@ class Controller():
 
     def run(self):
         """ The main loop of the game """
-
         # Keep track of the time that's passed in the game 
         clock = pygame.time.Clock()
 
         # Loop until the game ends
         while not self.__data.getGameOver():
+            self.checkKeypress()
+            if self.__paused:
+                
+                clock.tick(Preferences.SLEEP_TIME)
+                continue
+
             # Run the main behavior
             self.cycle() 
             # Sleep
@@ -75,6 +82,7 @@ class Controller():
         self.__numCycles += 1
         # Update the display based on the new state
         self.__display.updateGraphics(self.__data)
+        
 
     def checkKeypress(self):
         """ Update the game based on user input """
@@ -101,6 +109,18 @@ class Controller():
 
                     self.__data.setDirectionEast()
 
+                elif event.key in self.Keypress.REVERSE.value:
+
+                    self.reverseSnake()
+
+                elif event.key in self.Keypress.AI.value:
+
+                    self.__data.toggleAIMode()
+
+                elif event.key in self.Keypress.PAUSE.value:
+
+                    self.togglePause()
+
 
     def updateSnake(self):
         """ Move the snake forward one step, either in the current 
@@ -123,8 +143,6 @@ class Controller():
             self.advanceSnake(nextCell)
 
         
-
-
     def advanceSnake(self, nextCell):
         """ Update the state of the world to move the snake's head to the given cell """
     
@@ -152,7 +170,7 @@ class Controller():
 
 
             tail = self.__data.removeTail()             #Remove tail
-            tail.becomeEmpty()                          #Removed tail cell become empty
+            tail.becomeEmpty()                          #Removed tail cell become empty  
 
     def updateFood(self):
         """ Add food every FOOD_ADD_RATE cycles or if there is no food """
@@ -164,36 +182,86 @@ class Controller():
             Returns the *next* step the snake should take along the shortest path
             to the closest food cell. """
         
-        # Parepare all the tiles to search
-        self.__data.resetCellsForSearch()
+        try:
+            self.__data.resetCellsForSearch()   #Tiles to search
 
-        # Initialize a queue to hold the tiles to search
-        cellsToSearch = Queue()
+            cellsToSearch = Queue()             #Queue to search tiles
 
-        # Add the head to the queue and mark it as added
-        head = self.__data.getSnakeHead()
-        head.setAddedToSearchList()
-        cellsToSearch.put(head)
+            head = self.__data.getSnakeHead()   #Add the head to queue
+            head.setAddedToSearchList()
+            cellsToSearch.put(head)
 
-        # Search!
-        # TODO implement BFS here
+            while not cellsToSearch.empty():
+                current = cellsToSearch.get()
 
-        # If the search failed, return a random neighbor
-        return self.__data.getRandomNeighbor(head)
+                if current.isFood():
+                    return self.getFirstCellInPath(current)
 
-    def getFirstCellInPath(self, foodCell):
-        """ TODO COMMENT HERE """
+                for neighbor in self.__data.getNeighbors(current):      #Searches the neighboring tiles
+                    if not neighbor.alreadyAddedToSearchList() and not neighbor.isWall() and not neighbor.isBody():
 
-        # TODO
-        
-        return foodCell
+                        neighbor.setAddedToSearchList()
+                        neighbor.setParent(current)
+                        cellsToSearch.put(neighbor)
+
+            return self.__data.getRandomNeighbor(head)
+    
+        except Exception as e:
+
+            print(f"BFS Error: {e}")
+
+            raise
+
+    def getFirstCellInPath(self, food_Cell):
+        """ Trace back food to head."""
+        while food_Cell.getParent():          #Traces back path until it reaches the head
+            if food_Cell.getParent() == self.__data.getSnakeHead():
+
+                return food_Cell
+            
+            food_Cell = food_Cell.getParent()
+            
+        return food_Cell 
+
     
     def reverseSnake(self):
-        """ TODO COMMENT HERE """
+        """ Reverses the direction of the snake, switching the head and tail. """
+        snake_cells = self.__data._GameData__snakeCells
 
-        # TODO
+        snake_cells.reverse()
 
-        pass
+        for i, cell in enumerate(snake_cells):
+            if i == 0: 
+                cell.becomeHead()
+            else:
+                cell.becomeBody()
+
+        new_head = snake_cells[0]   
+        neck = snake_cells[1]
+
+        if new_head.getRow() < neck.getRow():
+
+            self.__data.setDirectionNorth()
+
+        elif new_head.getRow() > neck.getRow():
+
+            self.__data.setDirectionSouth()
+
+        elif new_head.getCol() < neck.getCol():
+
+            self.__data.setDirectionWest()
+
+        elif new_head.getCol() > neck.getCol():
+
+            self.__data.setDirectionEast()
+
+    def togglePause(self):
+        """ Toggles the pause state of the game """
+        self.__paused = not self.__paused
+        if self.__paused:
+            print("Game Paused")
+        else:
+            print("Game Resumed")
 
     def playSound_eat(self):
         """ Plays an eating sound """
@@ -211,6 +279,7 @@ class Controller():
         RIGHT = pygame.K_l, pygame.K_RIGHT  # l and right arrow key
         REVERSE = pygame.K_r,               # r
         AI = pygame.K_a,                    # a
+        PAUSE = pygame.K_p,                 # p
 
 
 if __name__ == "__main__":

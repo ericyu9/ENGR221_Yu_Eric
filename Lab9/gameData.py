@@ -5,7 +5,7 @@ Represents the current state of the game.
 Assignment adapted from HMC CS60
 
 Author: Eric Yu
-Date: November 17, 2024
+Date: December 8, 2024
 Description: This code handles the logic of the game like food location and movement.
 """
 
@@ -27,16 +27,18 @@ class GameData:
         self.__totalCells = self.__height * self.__width
 
         # The current movement mode of the snake (i.e., the current
-        # direction or in AI mode
+        # direction or in AI mode)
         self.__currentMode = self.SnakeMode.GOING_EAST
 
-        #A 2D array of cells in the board
+        # A 2D array of cells in the board
         self.__board = self.createBoard()
 
         # A list of cells that currently contain food (from oldest to newest)
         self.__foodCells = [] 
         # A list of cells that contain the snake (from head to tail)
         self.__snakeCells = []
+
+        self.__aiMode = False  # AI Mode on or off
 
         # Whether or not the game is over
         self.__gameOver = False
@@ -95,6 +97,10 @@ class GameData:
         """ Returns a boolean indicating whether or not we are in AI mode """
         return self.__currentMode == self.SnakeMode.AI_MODE
 
+    def toggleAIMode(self):
+        """Toggle the AI mode state."""        
+        self.__aiMode = not self.__aiMode
+
     def getCell(self, row, col):
         """ Returns the cell at the given row and column.
             Inputs: row - The row to get (between 0 and height-1)
@@ -124,7 +130,7 @@ class GameData:
         return len(self.__foodCells) == 0
     
     def addFood(self):
-        """ Adds food to an open spont on the board """
+        """ Adds food to an open spot on the board """
 
         # Find a value between 1 and self.__height-1 (inclusive)
         row = random.randrange(1, self.__height)
@@ -151,7 +157,6 @@ class GameData:
     # Snake movement methods #
     ##########################
 
-    # TODO Add method(s) here to support the controller's advanceSnake method!
     def advanceSnake(self, nextCell):
         """ Update the state of the world to move the snake's head to the given cell """
 
@@ -163,21 +168,23 @@ class GameData:
 
         # If the snake eats food
         elif nextCell.isFood():
+
             print("Eating food")
-            self.__data.eatFood(nextCell)           
+            self.eatFood(nextCell)
             nextCell.becomeHead()
-            self.__data.getSnakeHead().becomeBody()
-            self.__data.addHead(nextCell)
+            self.getSnakeHead().becomeBody()
+            self.addHead(nextCell)
 
         # If the snake moves to an empty cell
         elif nextCell.isEmpty():
+
             print("Moving to empty cell")
             nextCell.becomeHead()
-            self.__data.getSnakeHead().becomeBody()
-            self.__data.addHead(nextCell)
+            self.getSnakeHead().becomeBody()
+            self.addHead(nextCell)
 
             # Remove the tail
-            tail = self.__data.removeTail()
+            tail = self.removeTail()
             tail.becomeEmpty()
 
     ###############################
@@ -188,7 +195,6 @@ class GameData:
         """ Returns the cell to the north of the given cell """
         return self.getCell(cell.getRow() - 1, cell.getCol())
 
-        
     def getSouthNeighbor(self, cell):
         """Returns the cell to the south of the given cell """
         return self.getCell(cell.getRow() + 1, cell.getCol())
@@ -313,7 +319,17 @@ class GameData:
     ################################
     # Helper method(s) for reverse #
     ################################
+
     
+    def getSecondCell(self):
+        """ Second scell of the snake returns. """
+        if len(self.__snakeCells) > 1:
+
+            return self.__snakeCells[1]
+        
+        raise ValueError("Snake isn't logn enough.")
+
+
     # TODO Write method(s) here to help reverse the snake
 
     # Steps:
@@ -339,6 +355,13 @@ class GameData:
     #################################
     # Methods for AI implementation #
     #################################
+
+    def inAIMode(self):
+        return self.__aiMode
+
+    def toggleAIMode(self):
+        self.__aiMode = not self.__aiMode
+
 
     def resetCellsForSearch(self):
         for row in self.__board:
